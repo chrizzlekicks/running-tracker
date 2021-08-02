@@ -5,6 +5,7 @@ const express = require('express')
 const app = express()
 
 const db = require('./db/connect')
+const userRouter = require('./routers/user')
 const trackRouter = require('./routers/tracks')
 const notFound = require('./middleware/404')
 const dbErrorHandler = require('./middleware/dbErrorHandler')
@@ -13,6 +14,7 @@ const dbErrorHandler = require('./middleware/dbErrorHandler')
 app.use(express.json())
 
 // routes
+app.use('/api/v1/user', userRouter)
 app.use('/api/v1/tracks', trackRouter)
 
 // errors

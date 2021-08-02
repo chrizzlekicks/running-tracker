@@ -5,8 +5,4 @@ class CustomDBError extends Error {
   }
 }
 
-const createNewCustomError = (msg, statCode) => {
-  return new CustomDBError(msg, statCode)
-}
-
-module.exports = { CustomDBError, createNewCustomError }
+module.exports = CustomDBError
