@@ -1,4 +1,8 @@
 require('dotenv').config()
+require('express-async-errors')
+const cors = require('cors')
+const helmet = require('helmet')
+const xss = require('xss-clean')
 
 // express
 const express = require('express')
@@ -12,6 +16,9 @@ const dbErrorHandler = require('./middleware/dbErrorHandler')
 
 // middleware
 app.use(express.json())
+app.use(cors())
+app.use(helmet())
+app.use(xss())
 
 // routes
 app.use('/api/v1/user', userRouter)
