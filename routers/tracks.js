@@ -2,14 +2,14 @@ const express = require('express')
 const router = express.Router()
 
 const {
-  getTracks,
+  getAllTracks,
   createTrack,
-  getSingleTrack,
-  deleteTrack,
+  getTrack,
   updateTrack,
+  deleteTrack,
 } = require('../controllers/tracks')
 
-router.route('/').get(getTracks).post(createTrack)
-router.route('/:id').get(getSingleTrack).delete(deleteTrack).patch(updateTrack)
+router.route('/').get(getAllTracks).post(createTrack)
+router.route('/:id').get(getTrack).patch(updateTrack).delete(deleteTrack)
 
 module.exports = router

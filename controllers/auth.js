@@ -4,25 +4,25 @@ const { BadRequestError, UnauthenticatedError } = require('../errors')
 
 const register = async (req, res) => {
   const user = await User.create({ ...req.body })
-  const token = user.createJwt()
+  const token = user.createToken()
   res.status(StatusCodes.CREATED).json({ token })
 }
 
 const login = async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
-    throw new BadRequestError('email or password missing')
+    throw new BadRequestError('keine email oder passwort eingegeben')
   }
   const user = await User.findOne({ email })
   if (!user) {
-    throw new UnauthenticatedError('invalid email or password')
+    throw new UnauthenticatedError('ungültige zugangsaten')
   }
   // compare password
-  const doesPasswordMatch = user.checkPassword(password)
-  if (!doesPasswordMatch) {
-    throw new UnauthenticatedError('password does not match')
+  const isPasswordCorrect = await user.comparePassword(password)
+  if (!isPasswordCorrect) {
+    throw new UnauthenticatedError('passwort stimmmt nicht')
   }
-  const token = user.createJWT()
+  const token = user.createToken()
   res.status(StatusCodes.OK).json({ token })
 }
 

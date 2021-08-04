@@ -1,51 +1,51 @@
-const { Schema, model } = require('mongoose')
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const UserSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: [true, 'Username required'],
-    minLength: 4,
-    maxLength: 20,
+    required: [true, 'Benutzernamen eingeben'],
+    minLength: 3,
+    maxLength: 18,
+    unique: true,
   },
   email: {
     type: String,
-    required: [true, 'Email required'],
-    unique: true,
+    trim: true,
+    required: [true, 'Emailadresse eingeben'],
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Valid email required',
     ],
+    unique: true,
   },
   password: {
     type: String,
-    required: [true, 'Password required'],
+    required: [true, 'Passwort festlegen'],
     minLength: 6,
   },
 })
 
-UserSchema.pre('save', async function () {
+userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
+  next()
 })
 
-UserSchema.methods.createJWT = function () {
+userSchema.methods.createToken = function () {
   return jwt.sign(
     {
-      id: this._id,
+      userId: this._id,
       name: this.name,
-      email: this.email,
-      password: this.password,
     },
     'jwtSecret',
-    { expiresIn: '30d' }
+    { expiresIn: '1h' }
   )
 }
 
-UserSchema.methods.checkPassword = async function (input) {
+userSchema.methods.comparePassword = async function (input) {
   return bcrypt.compare(input, this.password)
 }
 
-module.exports = model('User', UserSchema)
+module.exports = mongoose.model('User', userSchema)
