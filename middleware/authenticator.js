@@ -9,7 +9,7 @@ const authMiddleware = async (req, res, next) => {
   const token = auth.split(' ')[1]
 
   try {
-    const decoded = jwt.verify(token, 'jwtSecret')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
     req.user = decoded
     next()
   } catch (error) {
