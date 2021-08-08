@@ -8,6 +8,7 @@ const getAllTracks = async (req, res) => {
 }
 
 const createTrack = async (req, res) => {
+  req.body.createdBy = req.user.userId
   const track = await Track.create({ ...req.body })
   res.status(StatusCodes.CREATED).json({ track })
 }

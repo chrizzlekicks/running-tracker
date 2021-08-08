@@ -7,7 +7,7 @@ const {
   getTrack,
   updateTrack,
   deleteTrack,
-} = require('../controllers/tracks')
+} = require('../controllers/trackController')
 
 router.route('/').get(getAllTracks).post(createTrack)
 router.route('/:id').get(getTrack).patch(updateTrack).delete(deleteTrack)
